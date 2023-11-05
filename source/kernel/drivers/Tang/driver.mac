@@ -183,7 +183,7 @@ CALDRV	equ	4048h
 ;    bit 2: 1 if the driver provides configuration
 ;             (implements the DRV_CONFIG routine)
 
-	db 1+(2*DRV_HOTPLUG)
+	db 1+(2*DRV_HOTPLUG)+4
 
 ;Reserved byte
 	db	0
@@ -207,9 +207,9 @@ DRV_NAME:
     jp  DRV_DIRECT2
     jp  DRV_DIRECT3
     jp  DRV_DIRECT4
-    ;jp  DRV_CONFIG
+    jp  DRV_CONFIG
 
-	ds	15
+	ds	12
 
 	jp	DEV_RW
 	jp	DEV_INFO
@@ -657,9 +657,11 @@ DRV_DIRECT4:
 ;     B = Device index
 ;     C = LUN index
 
-; DRV_CONFIG:
-;     ld a,1
-;     ret
+
+DRV_CONFIG:
+    ld a,1
+    ret
+
 
 ;=====
 ;=====  BEGIN of DEVICE-BASED specific routines
@@ -1383,7 +1385,8 @@ MY_GWORK:
 ;=======================
 
 INFO_S:
-	db	"WonderTANG! v"
+
+	db	"WonderTANG! SMS v"
 	db	VER_MAIN+"0",".",VER_SEC+"0",".",VER_REV+"0",13,10
 	db  "Synthetic Juice for your MSX",13,10,13,10
 	db	"2023 Luis Antoniosi",13,10
