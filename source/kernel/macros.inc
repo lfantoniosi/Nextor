@@ -8,14 +8,14 @@ TRUE    equ     NOT FALSE
 ;
 
 
-const   MACRO   name,N
-name     equ    (N)
+const   macro   name,value
+name     equ    (value)
 	 public name
 	endm
 ;
 ;
 ;
-warn    MACRO   text
+warn    macro   text
 	 if1
 	  .printx % text
 	 endif
@@ -23,7 +23,7 @@ warn    MACRO   text
 ;
 ;
 ;
-error   MACRO   text
+error   macro   text
 	 if1
 	  .error text
 	 endif
@@ -31,17 +31,17 @@ error   MACRO   text
 ;
 ;
 ;
-pr_dec  MACRO   msg1,N,msg2
-	 warn    <msg1 N msg2>
+pr_dec  macro   msg1,value,msg2
+	 warn    <msg1 value msg2>
 	endm
 ;
 ;
-pr_hex  MACRO   msg1,N,msg2
-	 warn    <msg1 N!h msg2>
+pr_hex  macro   msg1,value,msg2
+	 warn    <msg1 value!h msg2>
 	endm
 ;
 ;
-code    MACRO   instr,arg
+code    macro   instr,arg
 
 _code_ defl 0
 
@@ -160,7 +160,7 @@ endm
 OFFSET  equ     4100h
 PHASED  defl    FALSE
 ;
-rammod  MACRO
+rammod  macro
 PHASED   defl    TRUE
 	 .phase  $-OFFSET
 	endm
@@ -168,7 +168,7 @@ PHASED   defl    TRUE
 ;
 start:
 ;
-finish  MACRO   name
+finish  macro   name
 	 if      PHASED
 	  .dephase
 	 endif
@@ -179,10 +179,10 @@ finish  MACRO   name
 ;
 ;
 
-;--- The "proc" MACRO is used to define a label that is invoked
+;--- The "proc" macro is used to define a label that is invoked
 ;    at RAM in page 0 (when PHASED) or at ROM bank 4 (when not PHASED).
 
-proc    MACRO   name                    ;;Macro for declaring a public
+proc    macro   name                    ;;Macro for declaring a public
 	if	PHASED
 name&:                                  ;; label to be called.
 	 .dephase
@@ -196,7 +196,7 @@ name&:		;;For local call
 ;
 ;
 ;
-pcall   MACRO   cc,name                 ;;Macro for calling an external
+pcall   macro   cc,name                 ;;Macro for calling an external
 					;; routine.
 	 ifb    <name>
 	  call   ?&cc&##-OFFSET         ;;Unconditional CALL.
@@ -209,7 +209,7 @@ pcall   MACRO   cc,name                 ;;Macro for calling an external
 ;
 
 ; STROUT implementation with the ESC-Y bug corrected.
-; It is declared as as MACRO because it is defined
+; It is declared as as macro because it is defined
 ; twince in the kernel (bdos.mac, char.mac)
 ; and once more in MSXDOS2.SYS.
 ;
@@ -217,7 +217,7 @@ pcall   MACRO   cc,name                 ;;Macro for calling an external
 ; RETDIR is the routine jumped to at end. If 0, ret is generated instead.
 ; LOADCE: if specified, E and C registers are loaded prior to calling CONOUT.
 
-do_strout	MACRO	OUTDIR,RETDIR,LOADCE
+do_strout	macro	OUTDIR,RETDIR,LOADCE
 	local	stro_init
 	local	STROU2
 	local	ST10
@@ -269,7 +269,7 @@ ST10:	PUSH	DE
 	endm
 
 
-djpnz MACRO address
+djpnz macro address
     dec b
 	jp nz,address
   endm
@@ -280,7 +280,6 @@ djpnz MACRO address
 ;
 
 	IFNDEF DISABLE_UNDOCUMENTED_OPCODES 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 LD_IXL_N MACRO N
 	ld	ixl,N
@@ -340,8 +339,6 @@ DEC_IYL MACRO
 	ENDM
 
 	ELSE
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 LD_IXH_N MACRO N
 	ex 	(sp),ix
