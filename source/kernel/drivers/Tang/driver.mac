@@ -2,6 +2,9 @@
 	;
 	; Version by Luis Antoniosi
 	; Based on version 0.1 by Konamiman
+	;
+	; Open-source FPGA cartridge
+	; https://github.com/lfantoniosi/WonderTANG
 
 	org 4100h
 

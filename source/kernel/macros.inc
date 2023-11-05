@@ -279,9 +279,7 @@ djpnz MACRO address
 	.list
 ;
 
-UNDOC_OP equ	0	; user or not undocummented Z-80 instructions
-
-	IF UNDOC_OP
+	IFNDEF DISABLE_UNDOCUMENTED_OPCODES 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 LD_IXL_N MACRO N
