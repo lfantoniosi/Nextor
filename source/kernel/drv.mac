@@ -807,8 +807,8 @@ IS_DVB:
 	jr	nz,IS_NOT_DVB
 
 	ld	iy,(DVB_TABLE##)
-	ld a,iyh
-	or iyl
+	LD_N_IYH a ;ld a,iyh
+	OR_IYL	;or iyl
 	jr	z,IS_NOT_DVB
 
 	ld	a,(iy)
@@ -962,7 +962,7 @@ READ_BOOT:
 	ld	ix,DEV_RW##
 	jp	DO_CALBNK
 
-
+	IF UNDOC_OP
 ;-----------------------------------------------------------------------------
 ;
 ; Convert the disk error returned by a device-based routine,
@@ -1014,7 +1014,7 @@ COMP16:
 	ld	a,l
 	sub	e
 	ret
-
+	ENDIF
 ;-----------------------------------------------------------------------------
 ;
 ; Default DPB, it contains data for a 720K disk drive
@@ -1081,6 +1081,61 @@ KDERJ:
 
     ALIGN 7BD0h
     ;Here goes the 1K free area at the end of banks 0 and 3
+
+	IFE UNDOC_OP
+;-----------------------------------------------------------------------------
+;
+; Convert the disk error returned by a device-based routine,
+; into its drive-based equivalent
+
+POP_CONV_ERR:
+	inc	sp
+	inc	sp
+
+CONV_ERR:
+	or	a
+	ret	z
+	;jr	c,CONVE2
+	;xor	a
+	;ret
+CONVE2:
+
+	push	bc
+	ld	b,0
+	cp	.WPROT##
+	jr	z,CONV_ERR_END
+	ld	b,2
+	cp	.NRDY##
+	jr	z,CONV_ERR_END
+	ld	b,4
+	cp	.DATA##
+	jr	z,CONV_ERR_END
+	ld	b,6
+	cp	.SEEK##
+	jr	z,CONV_ERR_END
+	ld	b,8
+	cp	.RNF##
+	jr	z,CONV_ERR_END
+	ld	b,10
+	cp	.WRERR##
+	jr	z,CONV_ERR_END
+	ld	b,12
+
+CONV_ERR_END:
+	ld	a,b
+	pop	bc
+	scf
+	ret
+
+COMP16:
+	ld	a,h
+	sub	d
+	ret	nz
+	ld	a,l
+	sub	e
+	ret
+	ENDIF
+
 
 	finish	<DRV>
 ;

@@ -64,7 +64,7 @@ endef
 ###  MAIN RULE  ###
 ###################
 
-all: base ide ide-masteronly ide-emu ide-masteronly-emu ascii8 ascii16 mfrsd flashjacks ocm
+all: base ide ide-masteronly ide-emu ide-masteronly-emu ascii8 ascii16 mfrsd flashjacks ocm tang
 
 TOOLS := $(N80) $(LK80) $(LB80) objcopy sdcc $(MKNEXROM) dd
 
@@ -593,3 +593,28 @@ clean:
 	rm -f bank0/b0lab*.inc
 	rm -f bank2/b2labels.inc
 	rm -f bank4/b4rdlabs.inc
+
+### Tang
+
+tang: drivers/Tang/Nextor-$(VERSION).WonderTANG.ROM
+
+drivers/Tang/Nextor-$(VERSION).WonderTANG.ROM: \
+	nextor_base.dat \
+	drivers/Tang/driver.bin \
+	drivers/Tang/chgbnk.bin \
+	256.bytes
+
+	cat 256.bytes drivers/Tang/driver.bin > drivers/Tang/_driver.bin
+	$(MKNEXROM) nextor_base.dat $@ /d:drivers/Tang/_driver.bin /m:drivers/Tang/chgbnk.bin
+	$(call copy_to_bin,$@)
+	cp $@ /mnt/d/src/fpga/wonderTANG/WonderTANG/fpga/src/roms/Nextor-$(VERSION).WonderTANG-HC95.ROM.bin
+
+drivers/Tang/chgbnk.bin: \
+	drivers/Tang/chgbnk.mac
+
+	$(call assemble,drivers/Tang/chgbnk.mac,--build-type abs --output-file-extension bin)
+
+drivers/Tang/driver.bin: \
+	drivers/Tang/driver.mac
+
+	$(call assemble,drivers/Tang/driver.mac,--build-type abs --output-file-extension bin)
