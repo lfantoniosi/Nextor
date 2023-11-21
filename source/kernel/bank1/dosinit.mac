@@ -1564,8 +1564,7 @@ _U_CALLRAM:
         ex      af,af
 ...	      < call	_GET_P1 >
         push    af
-        LD_N_IYL A
-		;ld a,iyl
+        ld a,iyl
 ...	      < call	_PUT_P1 >
         ex      af,af
         call    CALSLT##
@@ -1652,7 +1651,7 @@ _U_CALLRAM2:
         dec     ix
         dec     ix
         push    ix
-        LD_IYL_N e	;ld iyl,e
+        ld iyl,e
 
         ld      a,d
         and     00111111b
@@ -1676,13 +1675,13 @@ _U_CALLRAM2:
         ld      bc,(MAP_TAB##)
         add     hl,bc
         ld      a,(hl)  ;A = Slot to call
-        LD_IYH_N a	;ld iyh,a
+        ld iyh,a
 
         ex      af,af'
         exx
         inc     sp
         inc     sp
-        jp      _U_CALLRAM
+        jr      _U_CALLRAM
 ;
 ;-----------------------------------------------------------------------------
 ;

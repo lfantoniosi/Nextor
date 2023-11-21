@@ -1,13 +1,13 @@
 	.z80
-	include	MACROS.INC
-;ld_a_iyl	macro
-;	db	0FDh
-;	ld	a,l
-;	endm
+	;include	MACROS.INC
+ld_a_iyl	macro
+	db	0FDh
+	ld	a,l
+	endm
 
 FIB	equ	3000h
 
-	jp	START2
+	jp	START
 
       ; -------------------------------------------------------------------------------
 	db	13
@@ -63,7 +63,7 @@ USAGE_S:
 	db	"TYPE MAPDRV.COM for more details.",13,10
 	db	0
 
-START2:
+START:
 	call	CHK250##
 
 	ld	de,BUF
@@ -117,7 +117,7 @@ NO_LOCK:
 	;* Partition number, or "d", "u", or file name
 
 	ld	de,BUF
-	ld_n_iyl a
+	ld_a_iyl
 	inc	iy
 	call	EXTPAR##
 	ld	b,.NOPAR##
@@ -152,7 +152,7 @@ IS_PART:
 	;* Device, LUN
 
 	ld	de,BUF
-	ld_n_iyl a
+	ld_a_iyl
 	inc	iy
 	call	EXTPAR##
 	jp	c,DO_MAP
@@ -183,7 +183,7 @@ OK_DEVLUN:
 	;* Slot, subslot, segment
 
 	ld	de,BUF
-	ld_n_iyl a
+	ld_a_iyl
 	inc	iy
 	call	EXTPAR##
 	jp	c,DO_MAP

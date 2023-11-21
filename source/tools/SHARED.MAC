@@ -98,7 +98,7 @@ EXTPAR::	or	a	;Terminate with error if A = 0
 	push	de
 	push	ix
 	ld	ix,0	;IXl: Number of parameters
-	LD_IXH_N a	;ld	ixh,a	;IXh: Parameter to be extracted
+	ld	ixh,a	;IXh: Parameter to be extracted
 	ld	hl,81h
 
 PASASPC:
@@ -119,9 +119,9 @@ PASAPAR:	ld	a,(hl)	;Traverse parameter characters
 	jr	PASAPAR
 
 ENDPNUM:
-	LD_N_IXH a	;ld	a,ixh	;Error if parameter index
+	ld	a,ixh	;Error if parameter index
 	dec	a	;is larger that the number of parameters
-	CP_IXL		;cp	ixl
+	cp	ixl
 	jr	nc,EXTPERR
 
 	ld	hl,81h
@@ -131,7 +131,7 @@ PASAP2:	ld	a,(hl)	;Skip spaces until finding next parameter
 	inc	hl
 	jr	z,PASAP2
 
-	LD_N_IXH a 	;ld	a,ixh	;If it is the desired parameter, extract it.
+	ld	a,ixh	;If it is the desired parameter, extract it.
 	cp	B	;Otherwise...
 	jr	z,PUTINDE0
 
@@ -161,7 +161,7 @@ ENDPUT:	xor	a
 	ld	(de),a
 	dec	b
 
-	LD_N_IXL a	;ld	a,ixl
+	ld	a,ixl
 	or	a
 	jr	FINEXTP
 EXTPERR:

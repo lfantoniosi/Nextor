@@ -2143,7 +2143,7 @@ scan_loop:
 	ld	e,(hl)
 	inc	hl
 	ld	d,(hl)
-	LD_IYH_N a  ;db	0FDh,67h	;LD IYh,A
+	db	0FDh,67h	;LD IYh,A
 	push	de
 	pop	ix
 	call	CALSLT
@@ -2173,10 +2173,10 @@ TNEX_LOOP:
 	push	hl
 	push	bc
 	and	10001111b
-	LD_IYH_N a	;db	0FDh,67h	;LD IYh,A
+	db	0FDh,67h	;LD IYh,A
 	ld	a,(MASTER_SLOT##)
-	CP_IYH		;db	0FDh,0BCh	;CP IYh
-	LD_N_IYH a	;db	0FDh,7Ch	;LD A,IYh
+	db	0FDh,0BCh	;CP IYh
+	db	0FDh,7Ch	;LD A,IYh
 	ld	h,40h
 	ld	ix,DV_TIRQ##
 	call	call_drv
