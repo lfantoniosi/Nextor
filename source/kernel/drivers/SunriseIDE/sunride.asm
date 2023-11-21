@@ -6,6 +6,7 @@
 	; By FRS
 
 	;MASTER_ONLY constant must be defined externally to generate the master-only variant.
+	INCLUDE	../../macros.inc
 
 	org	4000h
 	ds	4100h-$,0		; DRV_START must be at 4100h
@@ -1052,8 +1053,7 @@ DEV_RW2:
 	ld	b,0
 	ret	
 DEV_RW_NO0SEC:
- 	ld iyl,e
- 	ld iyh,d
+ 	ld_iy_de
 	ld	a,(iy+3)
 	and	11110000b
 	jp	nz,DEV_RW_NOSEC	;Only 28 bit sector numbers supported
@@ -1091,7 +1091,7 @@ DEV_ATA_RD:
 
 	call	CHK_RW_FAULT
 	ret	c
-	ld	iyl,b		; iyl=number of blocks
+	ld_iyl_b		; iyl=number of blocks
 	ex	de,hl		; de=destination address
 
 	ld	bc,512		; block size  ***Hardcoded. Ignores (BLKLEN)
@@ -1108,7 +1108,7 @@ DEV_ATA_WR:
 	ld	a,ATACMD.PWRSECTRT	; PIO write sector with retry
 	call	PIO_CMD
 	jp	c,DEV_RW_ERR
-	ld	iyl,b		; iyl=number of blocks
+	ld_iyl_b		; iyl=number of blocks
 
 	ld	bc,512		; block size  ***Hardcoded. Ignores (BLKLEN)
 	call	WRITE_DATA
@@ -1126,8 +1126,7 @@ DEV_ATAPI_RW:
 	push	de
 	ld	e,(ix+DEVINFO.pBASEWRK)		; hl=pointer to WorkArea
 	ld	d,(ix+DEVINFO.pBASEWRK+1)
-	ld iyl,e
- 	ld iyh,d				; iy=WRKAREA pointer
+ 	ld_iy_de				; iy=WRKAREA pointer
 	pop	de
 
 	; Set the block size
@@ -1174,7 +1173,7 @@ DEV_ATAPI_RD:
 	push	bc
 	push 	hl
 	push	iy
-	ld	iyl,1			; 1 block
+	ld_iyl_1			; 1 block
 	ld	hl,WRKAREA.PCTBUFF
 	ld	bc,PCTRW10._SIZE		; block size=10 bytes
 	call	WRITE_DATA		; Send the packet to the device
@@ -1217,13 +1216,13 @@ DEV_ATAPI_RD:
 	ex	de,hl		; de=destination address
 .loopsector:
 	push	bc
-	ld	iyl,c		; get the number of blocks per sector
+	ld_iyl_c		; get the number of blocks per sector
 .loopblock:
 	call	WAIT_DRQ
 	jr	c,.rderr
 	ld	hl,IDE_DATA
 	call	RUN_HLPR
-	dec	iyl
+	dec_iyl
 	jr	nz,.loopblock
 	pop	bc
 	djnz	.loopsector
@@ -1245,7 +1244,7 @@ DEV_ATAPI_WR:
 	push	bc
 	push	hl
 	push	iy
-	ld	iyl,1			; 1 block
+	ld_iyl_1			; 1 block
 	ld	hl,WRKAREA.PCTBUFF
 	ld	bc,PCTRW10._SIZE		; block size=10 bytes
 	call	WRITE_DATA		; Send the packet to the device
@@ -1287,7 +1286,7 @@ DEV_ATAPI_WR:
 	pop	bc
 .loopsector:
 	push	bc
-	ld	iyl,c		; get the number of blocks per sector
+	ld_iyl_c		; get the number of blocks per sector
 .loopblock:
 	call	WAIT_DRQ
 	jr	c,.rderr
@@ -1295,7 +1294,7 @@ DEV_ATAPI_WR:
 	call	RUN_HLPR
 	call	CHK_RW_FAULT
 	jr	c,.rderr
-	dec	iyl
+	dec_iyl
 	jp	nz,.loopblock
 	pop	bc
 	djnz	.loopsector
@@ -1841,13 +1840,13 @@ LUN_NFO_ATAPI:
 
 	ld	a,ATAPICMD.PACKET	; PIO send PACKET command 
 	call	PIO_CMD
-	jr	c,.errorpop
+	jp	c,.errorpop
 
 	pop	hl
 	push	hl		; Source=PCTBUF
 	ld	bc,12		; 12 byte packet
 	push	iy
-	ld	iyl,1
+	ld_iyl_1		
 	call	WRITE_DATA	; Send the packet to the device
 	pop	iy
 	jr	nc,.rdmediapropr	; No error? Then read media proprieties
@@ -1865,7 +1864,7 @@ LUN_NFO_ATAPI:
 	pop	de		; Destination=PCTBUFF
 	ld	bc,8		; 8 byte response
 	push	iy
-	ld	iyl,1
+	ld_iyl_1		
 	call	READ_DATA
 	pop	iy
 	jr	c,LUN_INFO_ERROR
@@ -2462,7 +2461,7 @@ READ_DATA:
 	ret	c
 	ld	hl,IDE_DATA
 	call	RUN_HLPR
-	dec	iyl
+	dec_iyl
 	jp	nz,.loop
 	ret
 
@@ -2481,7 +2480,7 @@ WRITE_DATA:
 	call	RUN_HLPR
 	call	CHK_RW_FAULT
 	ret	c
-	dec	iyl
+	dec_iyl
 	jp	nz,.loop
 	ret
 

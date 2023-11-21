@@ -4,9 +4,9 @@
 # The makefiles on each directory can be used independently as well.
 
 all:
-	$(MAKE) -C kernel
+	$(MAKE) -C kernel ASSEMBLE_SYMBOLS=$(ASSEMBLE_SYMBOLS)
 	$(MAKE) -C command/msxdos
-	$(MAKE) -C tools
+	$(MAKE) -C tools ASSEMBLE_SYMBOLS=$(ASSEMBLE_SYMBOLS)
 	$(MAKE) -C tools/C
 
 .PHONY: clean

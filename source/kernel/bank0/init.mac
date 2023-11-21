@@ -2143,7 +2143,7 @@ scan_loop:
 	ld	e,(hl)
 	inc	hl
 	ld	d,(hl)
-	db	0FDh,67h	;LD IYh,A
+	ld_iyh_a
 	push	de
 	pop	ix
 	call	CALSLT
@@ -2173,10 +2173,27 @@ TNEX_LOOP:
 	push	hl
 	push	bc
 	and	10001111b
-	db	0FDh,67h	;LD IYh,A
+
+	ifdef DISABLE_UNDOCUMENTED_OPCODES
+
+	ex (sp),iy
+	ex (sp),hl
+	ld h,a
 	ld	a,(MASTER_SLOT##)
-	db	0FDh,0BCh	;CP IYh
-	db	0FDh,7Ch	;LD A,IYh
+	cp  h
+	ld a,h
+	ex (sp),hl
+	ex (sp),iy
+
+	else
+
+	ld iyh,a
+	ld	a,(MASTER_SLOT##)
+	cp  iyh
+	ld a,iyh
+
+	endif
+
 	ld	h,40h
 	ld	ix,DV_TIRQ##
 	call	call_drv

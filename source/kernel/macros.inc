@@ -278,3 +278,237 @@ djpnz macro address
 ;
 	.list
 ;
+
+	ifndef DISABLE_UNDOCUMENTED_OPCODES 
+
+ld_ixh_a macro
+	ld	ixh,a
+	endm
+
+ld_iyh_a macro
+	ld	iyh,a
+	endm
+ld_iyh_c macro
+	ld	iyh,c
+	endm
+ld_iyh_e macro
+	ld	iyh,e
+	endm
+ld_iyh_d macro
+	ld	iyh,d
+	endm
+
+ld_iy_de macro
+	ld	iyl,e
+	ld	iyl,d
+	endm
+
+ld_iyl_e macro
+	ld	iyl,e
+	endm
+ld_iyl_a macro
+	ld	iyl,a
+	endm
+ld_iyl_b macro
+	ld	iyl,b
+	endm
+ld_iyl_1 macro
+	ld	iyl,1
+	endm
+ld_iyl_c macro
+	ld	iyl,c
+	endm
+
+ld_a_ixh macro
+	ld	a,ixh
+	endm
+
+ld_a_ixl macro
+	ld	a,ixl
+	endm
+
+ld_a_iyh macro
+	ld	a,iyh
+	endm
+
+ld_a_iyl macro
+	ld	a,iyl
+	endm
+
+cp_ixl macro
+	cp	ixl
+	endm
+
+cp_iyh macro
+	cp	iyh
+	endm
+
+cp_iyl macro
+	cp	iyl
+	endm
+
+or_iyl macro
+	or	iyl
+	endm
+
+dec_iyl macro
+	dec	iyl
+	endm
+
+	else 
+
+ld_ixh_a macro
+	ex 	(sp),ix
+	ex 	(sp),hl
+	ld	h,a
+	ex 	(sp),hl
+	ex 	(sp),ix
+	endm
+
+ld_iyh_a macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	h,a
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyh_c macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	h,c
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyh_e macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	h,e
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyh_d macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	h,d
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+ld_iy_de macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	l,e
+	ld	h,d
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+ld_iyl_e macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	l,e
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyl_a macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	l,a
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyl_b macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	l,b
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyl_1 macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	l,1
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+ld_iyl_c macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld	l,c
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+ld_a_ixh macro n
+	ex 	(sp),ix
+	ex 	(sp),hl
+	ld  a,h
+	ex 	(sp),hl
+	ex 	(sp),ix
+	endm
+
+ld_a_ixl macro
+	ex 	(sp),ix
+	ex 	(sp),hl
+	ld  a,l
+	ex 	(sp),hl
+	ex 	(sp),ix
+	endm
+
+ld_a_iyh macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld  a,h
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+ld_a_iyl macro n
+	ex 	(sp),iy
+	ex 	(sp),hl
+	ld  a,l
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+cp_ixl macro
+	ex 	(sp),ix
+	ex 	(sp),hl
+	cp	l
+	ex 	(sp),hl
+	ex 	(sp),ix
+	endm
+
+cp_iyh macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	cp	h
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+cp_iyl macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	cp	l
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+or_iyl macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	or	l
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+dec_iyl macro
+	ex 	(sp),iy
+	ex 	(sp),hl
+	dec	l
+	ex 	(sp),hl
+	ex 	(sp),iy
+	endm
+
+	endif

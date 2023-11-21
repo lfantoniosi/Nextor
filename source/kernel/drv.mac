@@ -277,6 +277,23 @@ null_message:
 	db	"2 - Double side",13,10
 	db	0
 
+
+;--------------
+;
+; Check if we are in disk emulation mode
+; Assumes IS_DVB has returned Cy=1 (that is, in DOS 1 mode and DVB_TABLE exists)
+; Returns Cy=1 if in emulation mode, Cy=0 if not
+; Corruputs: F
+
+IS_EMU:
+	push	hl
+	ld	hl,(DVB_TABLE##)
+	bit	7,(hl)
+	pop	hl
+	scf
+	ret	nz
+	ccf
+	ret
 ;-----------------------------------------------------------------------------
 ;
 ; Entries for direct calls.
@@ -807,8 +824,25 @@ IS_DVB:
 	jr	nz,IS_NOT_DVB
 
 	ld	iy,(DVB_TABLE##)
+
+	ifdef DISABLE_UNDOCUMENTED_OPCODES
+
+	ex (sp),iy
+	ex (sp),hl
+	ld a,h
+	or l
+	ex (sp),hl
+	ex (sp),iy
+
+	else
+
 	ld a,iyh
 	or iyl
+
+	endif
+
+	;ld_a_iyh
+	;or_iyl
 	jr	z,IS_NOT_DVB
 
 	ld	a,(iy)
@@ -866,22 +900,6 @@ IS_NOT_DVB:
 	ret
 
 
-;--------------
-;
-; Check if we are in disk emulation mode
-; Assumes IS_DVB has returned Cy=1 (that is, in DOS 1 mode and DVB_TABLE exists)
-; Returns Cy=1 if in emulation mode, Cy=0 if not
-; Corruputs: F
-
-IS_EMU:
-	push	iy
-	ld	iy,(DVB_TABLE##)
-	bit	7,(iy)
-	pop	iy
-	scf
-	ret	nz
-	ccf
-	ret
 
 ;-----------------------------------------------------------------------------
 ;

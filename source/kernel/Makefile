@@ -45,14 +45,20 @@ define copy_to_bin
 	cp $(1) ../../bin/kernels/$(2)
 endef
 
+ifeq ($(strip $(ASSEMBLE_SYMBOLS)),)
+EXTRA_SYMBOLS=
+else
+EXTRA_SYMBOLS=--define-symbols $(ASSEMBLE_SYMBOLS)
+endif
+
 define assemble
 	@printf "\n\033[0;36mAssembling %s\033[0m\n\n" $(1)
-	@$(N80) $(1) $$ $(2)
+	@$(N80) $(1) $$ $(2) $(EXTRA_SYMBOLS)
 endef
 
 define assemble_as
 	@printf "\n\033[0;36mAssembling %s as %s\033[0m\n\n" $(1) $(2)
-	@$(N80) $(1) $(2) $(3)
+	@$(N80) $(1) $(2) $(3) $(EXTRA_SYMBOLS)
 endef
 
 define print_linking
