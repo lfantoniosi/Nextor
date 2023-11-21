@@ -962,7 +962,7 @@ READ_BOOT:
 	ld	ix,DEV_RW##
 	jp	DO_CALBNK
 
-	IFNDEF DISABLE_UNDOCUMENTED_OPCODES 
+	IF UNDOC_OP
 ;-----------------------------------------------------------------------------
 ;
 ; Convert the disk error returned by a device-based routine,
@@ -1082,7 +1082,7 @@ KDERJ:
     ALIGN 7BD0h
     ;Here goes the 1K free area at the end of banks 0 and 3
 
-	IFDEF DISABLE_UNDOCUMENTED_OPCODES 
+	IFE UNDOC_OP
 ;-----------------------------------------------------------------------------
 ;
 ; Convert the disk error returned by a device-based routine,
